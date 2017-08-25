@@ -13,11 +13,10 @@ TO DO:
 int main(){
     FILE *entrada;
     FILE *saida;
-    char c = 'a', data[11], lancamento[11],linha[200], intermed[100];
-    int cont = 0, a=0;
+    char data[11], lancamento[11],linha[200], intermed[200], dados[200], final[600], aux[15], aux2[15];
+    int cont = 0, a=0, b=0, debito=0, credito=0;
     entrada = fopen("arquivo2.txt", "r");
     saida = fopen("saida.txt", "w");
-    fprintf(saida, "\n\n");
 
     // -----------------------------------------------
     // verificação para abertura do arquivo
@@ -31,61 +30,74 @@ int main(){
     // Main loop do programa
     // -----------------------------------------------
     while(!feof(entrada)){
-    fgets(linha, 200, entrada);
+        fgets(linha, 200, entrada);
 
-    // -----------------------------------------------
-    // CONSTRUTOR DE DATA E LANÇAMENTO: se a linha possui uma data (linha[3]=='/'), copia os caracteres para a variável char data
-    // -----------------------------------------------
-    if(linha[3] == '/'){
-        for(int a = 1 ; a < 11 ; a++){
-            data[a-1] = linha[a];
-        }
-        data[10] = '\0';
-        for(int a = 12 ; a < 22 ; a++){
-            lancamento[a-12] = linha[a];
-        }
-        lancamento[10] = '\0';
-    }
+        // -----------------------------------------------
+        // CONSTRUTOR DE DATA E LANÇAMENTO: se a linha possui uma data (linha[3]=='/'), copia os caracteres para a variável char data
+        // -----------------------------------------------
 
-    // -----------------------------------------------
-    // Linhas intermediárias (que não começam com data)
-    // -----------------------------------------------
-
-    else if(linha[3] == 20){
-        c = 'a';
-        while(c != '\n'){
-            c = linha[a];
-            a = a + 1;
-            cont = cont + 1;
-            printf("a: %d\ncont: %d", a, cont)
-        }
-        // caso em que a linha não possui dados de operações de débito, crédito ou saldo total.
-        if(cont < 90){
-            cont = 0;
-            a = 0;
-            while(linha[cont] == 20){
-            cont = cont + 1;
+        if(linha[3] == '/'){ // precisa verificar esse if (ele ta separando todas as linhas que tem data, mas nao finaliza se a linha tem todos os dados)
+            for(int a = 1 ; a < 11 ; a++){
+                data[a-1] = linha[a];
             }
-            while(c != '\n'){
-                c = linha[cont];
-                intermed[a] = c;
+            data[10] = '\0';
+            for(int a = 12 ; a < 22 ; a++){
+                lancamento[a-12] = linha[a];
+            }
+            lancamento[10] = '\0';
+            a=0;
+            for(a = 0 ; a < 10 ; a++){//concatenando na variavel final
+                final[a] = data[a];
+            }
+            
+            final[10] = ';';
+            for(a = 11 ; a < 21 ; a++){
+                final[a] = lancamento[a-11];
+            }
+            final[21] = ';';
+
+            for(a=22 ; a<42 ; a++){
+                final[a] = linha[a];
+            }
+
+            final[42] = ';';
+
+            while(linha[a] != '\n'){
+                final[a] = linha[a];
                 a++;
-                cont++;
+            }
+            final[72] = '\n';
+            final[73] = '\0';
+            
+
+            if(strlen(linha) > 80){
+                //SEGUNDA PARTE PARA LINHAS COMPLETAS!!
+                // para DEBITO
+                if(linha[109] == ','){
+                    a=0;
+                    cont=111;
+                    while(aux[a-1] != ' '){
+                        aux[a] = linha[cont];
+                        a++;
+                        cont--;
+                    }
+                    aux[a] = '\0';
+                    final[72] = ';';
+
+                    b = strlen(aux);
+                    for(a=0 ; a < b+3 ; a++){
+                        final[a+73] = aux[b-1];
+                        b--;
+                    }
+                    printf("%s\n", final);
+                }
+            }
+            else if(strlen(linha)<80){
+
+            }
         }
-        // Caso onde há resultados financeiros a serem trabalhados
-        }/*
-        else if (cont > 90){
-
-        }
-
-
-*/
     }
-
-
-    fprintf(saida, "%s;%s;%s\n", data, lancamento, intermed);
-    printf("%s\n", intermed);
-    }
+    
     
     fclose(entrada);
     fclose(saida);
