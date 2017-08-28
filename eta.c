@@ -270,7 +270,7 @@ int main(){
                 solve4(linha, saida, aux);
                 break;
             default:
-            printf("cabecalho\n");
+            printf("cabecalho");
         }
 
     }
