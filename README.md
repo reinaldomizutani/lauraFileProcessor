@@ -1,5 +1,6 @@
 # lauraFileProcessor
 
-this is a simple txt editor, for converting a txt with contability data to a csv for ease of manipulation
+Last version working properly directly from the original file.
 
-the problem now is all around managing line breaks ('\n'). There is a problem in the block between lines 54 and 73. Gotta catch the bug!!!
+HOW TO:
+change the file name in lines 2 and 54 then run the program.
